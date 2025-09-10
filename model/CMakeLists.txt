@@ -6,6 +6,8 @@ add_library(model_lib STATIC
     HistoryDataModel.h
     RealtimeDataModel.cpp
     RealtimeDataModel.h
+    MarketDataModel.cpp
+    MarketDataModel.h
 )
 
 target_include_directories(model_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
