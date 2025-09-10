@@ -1,22 +1,17 @@
-#ifndef INDICATORBASE_H
+﻿#ifndef INDICATORBASE_H
 #define INDICATORBASE_H
 
 #include <QObject>
 #include <QVector>
-#include "../online/AppData.h"
+#include "../AppData.h"
 
 class IndicatorBase : public QObject
 {
     Q_OBJECT
 public:
-    enum IndicatorType {
-        MA,
-        MACD,
-        RSI,
-        BOLL
-    };
 
-    explicit IndicatorBase(IndicatorType type, QObject *parent = nullptr);
+
+    explicit IndicatorBase(AppData::IndicatorType type, QObject *parent = nullptr);
     virtual ~IndicatorBase();
 
     // 计算指标值
@@ -29,7 +24,7 @@ public:
     virtual QString name() const = 0;
     
     // 获取指标类型
-    IndicatorType type() const;
+    AppData::IndicatorType type() const;
     
     // 获取计算结果
     virtual QVector<double> values() const = 0;
@@ -41,7 +36,7 @@ signals:
     void indicatorUpdated();
 
 protected:
-    IndicatorType m_type;
+    AppData::IndicatorType m_type;
 };
 
 #endif // INDICATORBASE_H

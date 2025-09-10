@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QString>
+#include "../AppData.h"
 
 class onLineMarket : public QObject
 {
@@ -25,11 +26,16 @@ public:
 
 signals:
     // 当收到新的行情数据时发出信号
-    void newMarketData(const QString &symbol, double price, double volume, 
-                      double high, double low, double open, double close);
+    void newMarketData(const AppData::MarketData &data);
     
     // 错误信号
     void errorOccurred(const QString &errorMessage);
+    
+    // 当收到新的交易数据时发出信号
+    void newTrade(const AppData::Trade &trade);
+    
+    // 当账户信息更新时发出信号
+    void accountUpdate(const AppData::Account &account);
 };
 
 #endif // ONLINEMARKET_H

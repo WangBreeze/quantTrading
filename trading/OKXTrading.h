@@ -1,11 +1,11 @@
-#ifndef OKXTRADING_H
+﻿#ifndef OKXTRADING_H
 #define OKXTRADING_H
 
 #include "TradingEngine.h"
 #include <QObject>
 #include <QString>
 #include <QNetworkAccessManager>
-#include <QWebSocket>
+#include <QtWebSockets/QWebSocket>
 #include <QTimer>
 
 class OKXTrading : public TradingEngine
@@ -30,9 +30,9 @@ private slots:
 
 private:
     QString generateSignature(const QString &timestamp, const QString &method, const QString &path);
-    void handleOrderResponse(QNetworkReply *reply, const AppData::Order &order);
-    void handleCancelResponse(QNetworkReply *reply, const QString &orderId);
-    void handleAccountResponse(QNetworkReply *reply);
+    void handleOrderResponse( const AppData::Order &order);
+    void handleCancelResponse( const QString &orderId);
+    void handleAccountResponse();
     void handleWsAccountUpdate(const QJsonArray &data);
     void handleWsOrderUpdate(const QJsonArray &data);
 

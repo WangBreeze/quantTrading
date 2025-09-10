@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include <QAbstractTableModel>
-#include "../online/AppData.h"
+#include "../AppData.h"
 
 class BaseModel : public QAbstractTableModel
 {

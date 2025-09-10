@@ -1,4 +1,4 @@
-﻿#include "onlinemarket.h"
+#include "onlinemarket.h"
 
 onLineMarket::onLineMarket(QObject *parent)
     : QObject{parent}

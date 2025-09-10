@@ -1,4 +1,4 @@
-#ifndef APPDATA_H
+﻿#ifndef APPDATA_H
 #define APPDATA_H
 
 #include <QString>
@@ -8,12 +8,19 @@
 #include <QVariant>
 
 namespace AppData {
-
+//指标类型
+enum IndicatorType {
+    MA,
+    MACD,
+    RSI,
+    BOLL
+};
 // 交易方向枚举
 enum Direction {
-    Long = 0,       // 做多
-    Short = 1,      // 做空
-    Unknown = 2     // 未知
+    Unknown = 0,     // 未知
+    Long ,       // 做多
+    Short ,      // 做空
+
 };
 
 // 订单类型枚举
@@ -27,14 +34,15 @@ enum OrderType {
 
 // 订单状态枚举
 enum OrderStatus {
-    Created = 0,    // 已创建
-    Submitted = 1,  // 已提交
-    Accepted = 2,   // 已接受
-    Partial = 3,    // 部分成交
-    Completed = 4,  // 全部成交
-    Canceled = 5,   // 已取消
-    Rejected = 6,   // 已拒绝
-    Expired = 7     // 已过期
+    UnknownStatus = 0,
+    Created ,    // 已创建
+    Submitted ,  // 已提交
+    Accepted ,   // 已接受
+    Partial ,    // 部分成交
+    Completed,  // 全部成交
+    Canceled ,   // 已取消
+    Rejected ,   // 已拒绝
+    Expired      // 已过期
 };
 
 // 交易所类型枚举
@@ -63,20 +71,25 @@ enum ProductType {
     Index = 6,      // 指数
     ETF = 7,        // ETF
     Fund = 8,       // 基金
-    Other = 9       // 其他
+    Others = 9       // 其他
 };
 
 // 时间周期枚举
 enum TimeFrame {
-    Tick = 0,       // Tick数据
-    Second = 1,     // 秒线
-    Minute = 2,     // 分钟线
-    Hour = 3,       // 小时线
-    Day = 4,        // 日线
-    Week = 5,       // 周线
-    Month = 6,      // 月线
-    Quarter = 7,    // 季线
-    Year = 8        // 年线
+    KUnknown = 0,     // 未知
+    Tick ,       // Tick数据
+    Second,     // 秒线
+    M1 ,     // 分钟线
+    M5 ,     // 分钟线
+    M15 ,     // 分钟线
+    M30 ,     // 分钟线
+    H1,       // 小时线
+    H4,       // 小时线
+    D1 ,        // 日线
+    W1 ,       // 周线
+    Month,      // 月线
+    Quarter,    // 季线
+    Year         // 年线
 };
 
 // 订单数据结构
@@ -148,6 +161,7 @@ struct Account {
     double unrealizedPnL;       // 未实现盈亏
     double realizedPnL;         // 已实现盈亏
     QMap<QString, Position> positions; // 持仓信息
+    QVector<Trade> trades;      // 订单交易记录
     QMap<QString, QVariant> extraInfo; // 额外信息
 
     Account() : balance(0.0), available(0.0), margin(0.0),
@@ -158,6 +172,7 @@ struct Account {
 struct MarketData {
     QString symbol;             // 交易品种代码
     QDateTime timestamp;        // 时间戳
+    double price;               // 最新价
     double open;                // 开盘价
     double high;                // 最高价
     double low;                 // 最低价
@@ -176,7 +191,7 @@ struct MarketData {
     QVector<double> askVolumes; // 卖盘量
     QMap<QString, QVariant> extraInfo; // 额外信息
 
-    MarketData() : open(0.0), high(0.0), low(0.0), close(0.0),
+    MarketData() : price(0.0), open(0.0), high(0.0), low(0.0), close(0.0),
                    volume(0.0), amount(0.0), tickCount(0),
                    openInterest(0.0), bidPrice(0.0), askPrice(0.0),
                    bidVolume(0.0), askVolume(0.0) {}
@@ -197,7 +212,7 @@ struct Candle {
     double openInterest;        // 持仓量（期货）
     QMap<QString, QVariant> extraInfo; // 额外信息
 
-    Candle() : timeFrame(Minute), open(0.0), high(0.0), low(0.0), close(0.0),
+    Candle() : timeFrame(M1), open(0.0), high(0.0), low(0.0), close(0.0),
                volume(0.0), amount(0.0), tickCount(0), openInterest(0.0) {}
 };
 
@@ -206,6 +221,7 @@ struct BacktestParams {
     QDateTime startDate;        // 回测开始日期
     QDateTime endDate;          // 回测结束日期
     QVector<QString> symbols;   // 回测品种列表
+    QString strategyName;       // 策略名称
     TimeFrame timeFrame;        // 回测时间周期
     double initialCapital;      // 初始资金
     double commission;          // 手续费率
@@ -213,12 +229,17 @@ struct BacktestParams {
     bool useAdjustedPrice;      // 是否使用复权价格
     QMap<QString, QVariant> extraParams; // 额外参数
 
-    BacktestParams() : timeFrame(Day), initialCapital(1000000.0),
+    BacktestParams() : timeFrame(D1), initialCapital(1000000.0),
                        commission(0.0003), slippage(0.0), useAdjustedPrice(true) {}
 };
 
 // 回测结果结构
 struct BacktestResult {
+    QString strategyName;       // 策略名称
+    QString strategyClass;      // 策略类名
+    QVector<QString> symbols;   // 回测品种列表
+    double initialCapital;      // 初始资金
+    QVariantMap parameters;     // 策略参数
     double finalCapital;        // 最终资金
     double totalReturn;         // 总收益率
     double annualReturn;        // 年化收益率
@@ -236,7 +257,8 @@ struct BacktestResult {
     QVector<QDateTime> equityTimes; // 权益曲线对应的时间点
     QMap<QString, QVariant> extraResults; // 额外结果
 
-    BacktestResult() : finalCapital(0.0), totalReturn(0.0), annualReturn(0.0),
+    BacktestResult() : initialCapital(1000000.0), finalCapital(0.0), 
+                       totalReturn(0.0), annualReturn(0.0),
                        sharpeRatio(0.0), maxDrawdown(0.0), winRate(0.0),
                        totalTrades(0), winTrades(0), lossTrades(0),
                        profitFactor(0.0), averageProfit(0.0), averageLoss(0.0) {}

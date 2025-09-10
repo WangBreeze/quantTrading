@@ -294,8 +294,18 @@ void onLineMarket_A::parseMarketData(const QByteArray &data)
     m_lastData["open"] = open;
     m_lastData["preClose"] = preClose;
     
-    // 发出信号通知新数据
-    emit newMarketData(symbol, lastPrice, volume, high, low, open, preClose);
+    // 创建MarketData对象并发出信号
+    AppData::MarketData marketData;
+    marketData.symbol = symbol;
+    marketData.price = lastPrice;
+    marketData.volume = volume;
+    marketData.high = high;
+    marketData.low = low;
+    marketData.open = open;
+    marketData.close = preClose;
+    marketData.timestamp = QDateTime::currentDateTime();
+    
+    emit newMarketData(marketData);
 }
 
 // WebSocket相关方法实现
@@ -429,8 +439,18 @@ void onLineMarket_A::parseWebSocketMessage(const QString &message)
         if (dataObj.contains("open")) m_lastData["open"] = open;
         if (dataObj.contains("preClose")) m_lastData["preClose"] = preClose;
         
-        // 发出信号通知新数据
-        emit newMarketData(symbol, lastPrice, volume, high, low, open, preClose);
+        // 创建MarketData对象并发出信号
+        AppData::MarketData marketData;
+        marketData.symbol = symbol;
+        marketData.price = lastPrice;
+        marketData.volume = volume;
+        marketData.high = high;
+        marketData.low = low;
+        marketData.open = open;
+        marketData.close = preClose;
+        marketData.timestamp = QDateTime::currentDateTime();
+        
+        emit newMarketData(marketData);
     }
 }
 

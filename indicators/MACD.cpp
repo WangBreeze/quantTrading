@@ -1,8 +1,9 @@
-#include "MACD.h"
-#include <cmath>
+﻿#include "MACD.h"
+#include "../AppData.h"
+
 
 MACD::MACD(int fastPeriod, int slowPeriod, int signalPeriod, QObject *parent)
-    : IndicatorBase(MACD, parent), 
+    : IndicatorBase(AppData::MACD, parent),
       m_fastPeriod(fastPeriod), 
       m_slowPeriod(slowPeriod), 
       m_signalPeriod(signalPeriod)

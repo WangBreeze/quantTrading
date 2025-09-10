@@ -1,6 +1,6 @@
-#include "IndicatorBase.h"
+﻿#include "IndicatorBase.h"
 
-IndicatorBase::IndicatorBase(IndicatorType type, QObject *parent)
+IndicatorBase::IndicatorBase(AppData::IndicatorType type, QObject *parent)
     : QObject(parent), m_type(type)
 {
 }
@@ -9,7 +9,7 @@ IndicatorBase::~IndicatorBase()
 {
 }
 
-IndicatorBase::IndicatorType IndicatorBase::type() const
+AppData::IndicatorType IndicatorBase::type() const
 {
     return m_type;
 }

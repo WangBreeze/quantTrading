@@ -1,9 +1,8 @@
-#include "MovingAverage.h"
-#include <numeric>
-#include <cmath>
+﻿#include "MovingAverage.h"
+#include "../AppData.h"
 
 MovingAverage::MovingAverage(int period, MAType maType, QObject *parent)
-    : IndicatorBase(MA, parent), m_period(period), m_maType(maType)
+    : IndicatorBase(AppData::MA, parent), m_period(period), m_maType(maType)
 {
 }
 

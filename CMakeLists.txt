@@ -18,19 +18,25 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    add_compile_options(-g -O0 -Wall -Wextra)
-else()
-    add_compile_options(-O2 -DNDEBUG)
-endif()
+# if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+#     add_compile_options(-g -O0 -Wall -Wextra)
+# else()
+#     add_compile_options(-O2 -DNDEBUG)
+# endif()
+set(PROJECT_SOURCES
+    main.cpp
+    qml.qrc
+    AppData.h
 
+)
 # 查找Qt依赖
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS 
+find_package(QT NAMES  Qt5 REQUIRED COMPONENTS
     Core 
     Quick 
     Widgets 
     Network
     Concurrent
+    WebSockets
 )
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS 
     Core 
@@ -38,6 +44,7 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS
     Widgets 
     Network
     Concurrent
+    WebSockets
 )
 
 # 添加子目录
@@ -54,7 +61,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 else()
     add_executable(kquant ${PROJECT_SOURCES})
 endif()
-
+target_include_directories(kquant PRIVATE ${Qt${QT_VERSION_MAJOR}WebSockets_INCLUDE_DIRS})
 # 链接库
 target_link_libraries(kquant PRIVATE
     Qt${QT_VERSION_MAJOR}::Core
@@ -62,12 +69,17 @@ target_link_libraries(kquant PRIVATE
     Qt${QT_VERSION_MAJOR}::Widgets
     Qt${QT_VERSION_MAJOR}::Network
     Qt${QT_VERSION_MAJOR}::Concurrent
+    Qt${QT_VERSION_MAJOR}::WebSockets
     online_lib
     history_lib
     model_lib
     trading_lib
 )
-
+# if(MSVC)
+#     add_compile_options(/W4 /WX)
+# else()
+#     add_compile_options(-Wall -Wextra -Werror)
+# endif()
 # 安装规则
 install(TARGETS kquant
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}

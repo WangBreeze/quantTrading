@@ -1,11 +1,12 @@
-#include "EastMoneyTrading.h"
+﻿#include "EastMoneyTrading.h"
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QUrlQuery>
 #include <QTimer>
-#include <QWebSocket>
+#include <QJsonArray>
+#include <QtWebSockets/QWebSocket>
 
 EastMoneyTrading::EastMoneyTrading(const QString &accountId, const QString &token, QObject *parent)
     : TradingEngine(parent), m_accountId(accountId), m_token(token)
@@ -53,7 +54,7 @@ void EastMoneyTrading::placeOrder(const AppData::Order &order)
     
     QNetworkReply *reply = m_restManager->post(request, QJsonDocument(orderJson).toJson());
     connect(reply, &QNetworkReply::finished, this, [this, reply, order]() {
-        handleOrderResponse(reply, order);
+        handleOrderResponse( order);
     });
 }
 
@@ -70,7 +71,7 @@ void EastMoneyTrading::cancelOrder(const QString &orderId)
     
     QNetworkReply *reply = m_restManager->post(request, QJsonDocument(cancelJson).toJson());
     connect(reply, &QNetworkReply::finished, this, [this, reply, orderId]() {
-        handleCancelResponse(reply, orderId);
+        handleCancelResponse( orderId);
     });
 }
 
@@ -142,23 +143,26 @@ void EastMoneyTrading::sendPing()
     }
 }
 
-void EastMoneyTrading::handleOrderResponse(QNetworkReply *reply, const AppData::Order &order)
+void EastMoneyTrading::handleOrderResponse(const AppData::Order &order)
 {
+    QNetworkReply *reply = dynamic_cast<QNetworkReply *>(sender());
     // 处理订单响应
     // ...
     reply->deleteLater();
 }
 
-void EastMoneyTrading::handleCancelResponse(QNetworkReply *reply, const QString &orderId)
+void EastMoneyTrading::handleCancelResponse(const QString &orderId)
 {
     // 处理取消订单响应
+    QNetworkReply *reply = dynamic_cast<QNetworkReply *>(sender());
     // ...
     reply->deleteLater();
 }
 
-void EastMoneyTrading::handleAccountResponse(QNetworkReply *reply)
+void EastMoneyTrading::handleAccountResponse()
 {
     // 处理账户查询响应
+    QNetworkReply *reply = dynamic_cast<QNetworkReply *>(sender());
     // ...
     reply->deleteLater();
 }

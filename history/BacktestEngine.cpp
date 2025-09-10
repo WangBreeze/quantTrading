@@ -1,4 +1,4 @@
-#include "BacktestEngine.h"
+﻿#include "BacktestEngine.h"
 #include <QDebug>
 #include <QThread>
 #include <QCoreApplication>
@@ -41,7 +41,7 @@ void BacktestEngine::addStrategy(std::shared_ptr<Strategy> strategy)
 bool BacktestEngine::runBacktest()
 {
     if (!initialize()) {
-        emit logMessage("回测初始化失败", 2);
+        emit logMessage(u8"回测初始化失败", 2);
         return false;
     }
 

@@ -6,7 +6,7 @@ add_library(online_lib STATIC
     onlinemarket_okb.h
     onlinemarket_A.cpp
     onlinemarket_A.h
-    AppData.h
+
 )
 
 target_include_directories(online_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

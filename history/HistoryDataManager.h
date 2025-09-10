@@ -1,7 +1,7 @@
-#ifndef HISTORYDATAMANAGER_H
+﻿#ifndef HISTORYDATAMANAGER_H
 #define HISTORYDATAMANAGER_H
 
-#include "../online/AppData.h"
+#include "../AppData.h"
 #include <QObject>
 #include <QString>
 #include <QDateTime>

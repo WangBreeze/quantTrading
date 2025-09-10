@@ -1,13 +1,14 @@
-#include "BinanceTrader.h"
+﻿#include "BinanceTrader.h"
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QUrlQuery>
 #include <QTimer>
-#include <QWebSocket>
+#include <QtWebSockets/QWebSocket>
 #include <QCryptographicHash>
 #include <QMessageAuthenticationCode>
+#include <QJsonArray>
 
 BinanceTrader::BinanceTrader(const QString &apiKey, const QString &secretKey, QObject *parent)
     : TradingEngine(parent), m_apiKey(apiKey), m_secretKey(secretKey)
@@ -58,7 +59,7 @@ void BinanceTrader::placeOrder(const AppData::Order &order)
     
     QNetworkReply *reply = m_restManager->post(request, query.toString().toUtf8());
     connect(reply, &QNetworkReply::finished, this, [this, reply, order]() {
-        handleOrderResponse(reply, order);
+        handleOrderResponse( order);
     });
 }
 
@@ -79,7 +80,7 @@ void BinanceTrader::cancelOrder(const QString &orderId)
     
     QNetworkReply *reply = m_restManager->deleteResource(request);
     connect(reply, &QNetworkReply::finished, this, [this, reply, orderId]() {
-        handleCancelResponse(reply, orderId);
+        handleCancelResponse( orderId);
     });
 }
 
@@ -151,8 +152,9 @@ void BinanceTrader::sendPing()
     }
 }
 
-void BinanceTrader::handleOrderResponse(QNetworkReply *reply, const AppData::Order &order)
+void BinanceTrader::handleOrderResponse(const AppData::Order &order)
 {
+    QNetworkReply *reply = dynamic_cast<QNetworkReply *>(sender());
     if (reply->error() != QNetworkReply::NoError) {
         emit errorOccurred(reply->errorString());
         reply->deleteLater();
@@ -185,8 +187,9 @@ void BinanceTrader::handleOrderResponse(QNetworkReply *reply, const AppData::Ord
     reply->deleteLater();
 }
 
-void BinanceTrader::handleCancelResponse(QNetworkReply *reply, const QString &orderId)
+void BinanceTrader::handleCancelResponse( const QString &orderId)
 {
+    QNetworkReply *reply = dynamic_cast<QNetworkReply *>(sender());
     if (reply->error() != QNetworkReply::NoError) {
         emit errorOccurred(reply->errorString());
         reply->deleteLater();
@@ -212,8 +215,9 @@ void BinanceTrader::handleCancelResponse(QNetworkReply *reply, const QString &or
     reply->deleteLater();
 }
 
-void BinanceTrader::handleAccountResponse(QNetworkReply *reply)
+void BinanceTrader::handleAccountResponse()
 {
+    QNetworkReply *reply = dynamic_cast<QNetworkReply *>(sender());
     if (reply->error() != QNetworkReply::NoError) {
         emit errorOccurred(reply->errorString());
         reply->deleteLater();
@@ -296,8 +300,8 @@ void BinanceTrader::handleWsAccountUpdate(const QJsonObject &data)
 
 AppData::OrderStatus BinanceTrader::parseOrderStatus(const QString &status)
 {
-    if (status == "NEW") return AppData::New;
-    if (status == "PARTIALLY_FILLED") return AppData::PartiallyFilled;
+    if (status == "NEW") return AppData::Created;
+    if (status == "PARTIALLY_FILLED") return AppData::Partial;
     if (status == "FILLED") return AppData::Completed;
     if (status == "CANCELED") return AppData::Canceled;
     if (status == "REJECTED") return AppData::Rejected;

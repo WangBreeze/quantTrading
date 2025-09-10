@@ -1,8 +1,9 @@
-#include "RSI.h"
+﻿#include "RSI.h"
 #include <cmath>
+#include "../AppData.h"
 
 RSI::RSI(int period, QObject *parent)
-    : IndicatorBase(RSI, parent), 
+    : IndicatorBase(AppData::RSI, parent),
       m_period(period),
       m_lastClose(0.0),
       m_avgGain(0.0),

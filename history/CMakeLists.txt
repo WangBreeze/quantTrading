@@ -6,11 +6,14 @@ add_library(history_lib STATIC
     HistoryDataManager.h
     BacktestEngine.cpp
     BacktestEngine.h
+    KlineGenerator.cpp
+    KlineGenerator.h
 )
 
 target_include_directories(history_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(history_lib PRIVATE 
     Qt${QT_VERSION_MAJOR}::Core
+    Qt${QT_VERSION_MAJOR}::Concurrent
     online_lib
 )
 

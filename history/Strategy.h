@@ -1,7 +1,7 @@
-#ifndef STRATEGY_H
+﻿#ifndef STRATEGY_H
 #define STRATEGY_H
 
-#include "../online/AppData.h"
+#include "../AppData.h"
 #include <QObject>
 #include <QVector>
 #include <QMap>
@@ -18,7 +18,7 @@ public:
     virtual ~Strategy();
 
     // 策略初始化方法，在回测或实盘开始前调用
-    virtual void initialize() = 0;
+    virtual bool initialize(QVariantMap config = QVariantMap()) = 0;
 
     // 策略清理方法，在回测或实盘结束后调用
     virtual void cleanup() = 0;

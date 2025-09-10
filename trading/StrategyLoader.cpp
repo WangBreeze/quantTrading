@@ -1,4 +1,4 @@
-#include "StrategyLoader.h"
+﻿#include "StrategyLoader.h"
 #include <QFile>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -68,7 +68,7 @@ bool StrategyLoader::loadFromFile(const QString &filePath)
         }
 
         // 初始化策略
-        if (!strategy->initialize(config)) {
+        if (!(strategy->initialize(config))) {
             emit errorOccurred(QString("Failed to initialize strategy: %1").arg(strategyName));
             continue;
         }
@@ -99,7 +99,7 @@ bool StrategyLoader::loadFromBacktestResult(const AppData::BacktestResult &resul
     // 从回测结果构建配置
     QVariantMap config;
     config["initialCapital"] = result.initialCapital;
-    config["symbols"] = result.symbols;
+    config["symbols"] = result.symbols.count() > 0 ? result.symbols.first() : "";
     config["parameters"] = result.parameters;
 
     // 初始化策略
@@ -139,26 +139,26 @@ std::shared_ptr<Strategy> StrategyLoader::createStrategy(const QString &classNam
     QPluginLoader loader(pluginPath);
     QObject *plugin = loader.instance();
     
-    if (plugin) {
-        Strategy *strategy = qobject_cast<Strategy*>(plugin);
-        if (strategy) {
-            return std::shared_ptr<Strategy>(strategy, [loader](Strategy*) mutable {
-                loader.unload();
-            });
-        }
-        loader.unload();
-    }
+    // if (plugin) {
+    //     Strategy *strategy = qobject_cast<Strategy*>(plugin);
+    //     if (strategy) {
+    //         return std::shared_ptr<Strategy>(strategy, [loader](Strategy*) mutable {
+    //             loader.unload();
+    //         });
+    //     }
+    //     loader.unload();
+    // }
 
     // 内置策略创建
-    if (className == "MovingAverageStrategy") {
-        return std::make_shared<MovingAverageStrategy>();
-    } else if (className == "RSIStrategy") {
-        return std::make_shared<RSIStrategy>();
-    } else if (className == "MACDStrategy") {
-        return std::make_shared<MACDStrategy>();
-    } else if (className == "BollingerBandsStrategy") {
-        return std::make_shared<BollingerBandsStrategy>();
-    }
+    // if (className == "MovingAverageStrategy") {
+    //     return std::make_shared<MovingAverageStrategy>();
+    // } else if (className == "RSIStrategy") {
+    //     return std::make_shared<RSIStrategy>();
+    // } else if (className == "MACDStrategy") {
+    //     return std::make_shared<MACDStrategy>();
+    // } else if (className == "BollingerBandsStrategy") {
+    //     return std::make_shared<BollingerBandsStrategy>();
+    // }
 
     return nullptr;
 }

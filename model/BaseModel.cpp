@@ -1,10 +1,10 @@
-#include "BaseModel.h"
+﻿#include "BaseModel.h"
 
 BaseModel::BaseModel(QObject *parent)
     : QAbstractTableModel(parent)
 {
     // 初始化表头
-    m_headers = {"时间", "代码", "价格", "数量", "方向", "成交额"};
+    m_headers = {u8"时间", u8"代码", u8"价格", u8"数量", u8"方向", u8"成交额"};
 }
 
 QVariant BaseModel::headerData(int section, Qt::Orientation orientation, int role) const

@@ -1,4 +1,4 @@
-﻿# Trading模块配置
+# Trading模块配置
 add_library(trading_lib STATIC
     TradingEngine.cpp
     TradingEngine.h

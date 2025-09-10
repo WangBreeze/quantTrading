@@ -250,8 +250,18 @@ void onLineMarket_OKB::parseMarketData(const QByteArray &data)
     double low24h = tickerObj["low24h"].toString().toDouble();
     double openPrice = tickerObj["open24h"].toString().toDouble();
     
-    // 发出信号通知新数据
-    emit newMarketData(symbol, lastPrice, volume24h, high24h, low24h, openPrice, lastPrice);
+    // 创建MarketData对象并发出信号
+    AppData::MarketData marketData;
+    marketData.symbol = symbol;
+    marketData.price = lastPrice;
+    marketData.volume = volume24h;
+    marketData.high = high24h;
+    marketData.low = low24h;
+    marketData.open = openPrice;
+    marketData.close = lastPrice;
+    marketData.timestamp = QDateTime::currentDateTime();
+    
+    emit newMarketData(marketData);
 }
 
 // WebSocket相关方法实现
@@ -370,7 +380,17 @@ void onLineMarket_OKB::parseWebSocketMessage(const QString &message)
         double low24h = tickerObj["low24h"].toString().toDouble();
         double openPrice = tickerObj["open24h"].toString().toDouble();
         
-        // 发出信号通知新数据
-        emit newMarketData(symbol, lastPrice, volume24h, high24h, low24h, openPrice, lastPrice);
+        // 创建MarketData对象并发出信号
+        AppData::MarketData marketData;
+        marketData.symbol = symbol;
+        marketData.price = lastPrice;
+        marketData.volume = volume24h;
+        marketData.high = high24h;
+        marketData.low = low24h;
+        marketData.open = openPrice;
+        marketData.close = lastPrice;
+        marketData.timestamp = QDateTime::currentDateTime();
+        
+        emit newMarketData(marketData);
     }
 }

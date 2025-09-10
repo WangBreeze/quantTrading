@@ -1,4 +1,4 @@
-#ifndef ONLINEMARKET_OKB_H
+﻿#ifndef ONLINEMARKET_OKB_H
 #define ONLINEMARKET_OKB_H
 
 #include "onlinemarket.h"
@@ -9,7 +9,7 @@
 #include <QJsonArray>
 #include <QTimer>
 #include <QUrl>
-#include <QWebSocket>
+#include <QtWebSockets/QWebSocket>
 #include <QDateTime>
 
 class onLineMarket_OKB : public onLineMarket
@@ -40,8 +40,7 @@ public:
 
 signals:
     // 当收到新的行情数据时发出信号
-    void newMarketData(const QString &symbol, double price, double volume, 
-                      double high, double low, double open, double close);
+    void newMarketData(const AppData::MarketData &data);
     
     // 错误信号
     void errorOccurred(const QString &errorMessage);
@@ -61,6 +60,11 @@ private:
     // 解析JSON响应
     void parseMarketData(const QByteArray &data);
     void parseWebSocketMessage(const QString &message);
+    
+    // 创建MarketData对象
+    AppData::MarketData createMarketData(const QString &symbol, double price, 
+                                       double volume, double high, double low,
+                                       double open, double close);
     
     // 初始化WebSocket连接
     void initializeWebSocket();

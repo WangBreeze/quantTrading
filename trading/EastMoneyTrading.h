@@ -1,11 +1,11 @@
-#ifndef EASTMONEYTRADING_H
+﻿#ifndef EASTMONEYTRADING_H
 #define EASTMONEYTRADING_H
 
 #include "TradingEngine.h"
 #include <QObject>
 #include <QString>
 #include <QNetworkAccessManager>
-#include <QWebSocket>
+#include <QtWebSockets/QWebSocket>
 #include <QTimer>
 
 class EastMoneyTrading : public TradingEngine
@@ -29,9 +29,9 @@ private slots:
     void sendPing();
 
 private:
-    void handleOrderResponse(QNetworkReply *reply, const AppData::Order &order);
-    void handleCancelResponse(QNetworkReply *reply, const QString &orderId);
-    void handleAccountResponse(QNetworkReply *reply);
+    void handleOrderResponse( const AppData::Order &order);
+    void handleCancelResponse(const QString &orderId);
+    void handleAccountResponse();
     void handleWsAccountUpdate(const QJsonObject &data);
     void handleWsOrderUpdate(const QJsonObject &data);
 

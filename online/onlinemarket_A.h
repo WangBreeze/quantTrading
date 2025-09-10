@@ -1,4 +1,4 @@
-#ifndef ONLINEMARKET_A_H
+﻿#ifndef ONLINEMARKET_A_H
 #define ONLINEMARKET_A_H
 
 #include "onlinemarket.h"
@@ -9,7 +9,7 @@
 #include <QJsonArray>
 #include <QTimer>
 #include <QUrl>
-#include <QWebSocket>
+#include <QtWebSockets/QWebSocket>
 #include <QDateTime>
 #include <QMap>
 

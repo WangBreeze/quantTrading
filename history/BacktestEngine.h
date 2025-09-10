@@ -3,7 +3,7 @@
 
 #include "Strategy.h"
 #include "HistoryDataManager.h"
-#include "../online/AppData.h"
+#include "../AppData.h"
 #include <QObject>
 #include <QVector>
 #include <QMap>

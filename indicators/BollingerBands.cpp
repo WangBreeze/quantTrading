@@ -1,9 +1,9 @@
-#include "BollingerBands.h"
-#include <numeric>
+﻿#include "BollingerBands.h"
 #include <cmath>
+#include "../AppData.h"
 
 BollingerBands::BollingerBands(int period, double multiplier, QObject *parent)
-    : IndicatorBase(BOLL, parent), 
+    : IndicatorBase(AppData::BOLL, parent),
       m_period(period), 
       m_multiplier(multiplier)
 {

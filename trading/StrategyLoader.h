@@ -5,7 +5,7 @@
 #include <QMap>
 #include <memory>
 #include "../history/Strategy.h"
-#include "../online/AppData.h"
+#include "../AppData.h"
 
 class StrategyLoader : public QObject
 {

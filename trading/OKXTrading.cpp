@@ -1,11 +1,12 @@
-#include "OKXTrading.h"
+﻿#include "OKXTrading.h"
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QJsonArray>
 #include <QUrlQuery>
 #include <QTimer>
-#include <QWebSocket>
+#include <QtWebSockets/QWebSocket>
 
 OKXTrading::OKXTrading(const QString &apiKey, const QString &secretKey, QObject *parent)
     : TradingEngine(parent), m_apiKey(apiKey), m_secretKey(secretKey)
@@ -59,7 +60,7 @@ void OKXTrading::placeOrder(const AppData::Order &order)
     
     QNetworkReply *reply = m_restManager->post(request, QJsonDocument(orderJson).toJson());
     connect(reply, &QNetworkReply::finished, this, [this, reply, order]() {
-        handleOrderResponse(reply, order);
+        handleOrderResponse( order);
     });
 }
 
@@ -82,7 +83,7 @@ void OKXTrading::cancelOrder(const QString &orderId)
     
     QNetworkReply *reply = m_restManager->post(request, QJsonDocument(cancelJson).toJson());
     connect(reply, &QNetworkReply::finished, this, [this, reply, orderId]() {
-        handleCancelResponse(reply, orderId);
+        handleCancelResponse( orderId);
     });
 }
 
@@ -165,23 +166,26 @@ void OKXTrading::sendPing()
     }
 }
 
-void OKXTrading::handleOrderResponse(QNetworkReply *reply, const AppData::Order &order)
+void OKXTrading::handleOrderResponse( const AppData::Order &order)
 {
     // 处理订单响应
+    QNetworkReply *reply = dynamic_cast<QNetworkReply *>(sender());
     // ...
     reply->deleteLater();
 }
 
-void OKXTrading::handleCancelResponse(QNetworkReply *reply, const QString &orderId)
+void OKXTrading::handleCancelResponse( const QString &orderId)
 {
     // 处理取消订单响应
+    QNetworkReply *reply = dynamic_cast<QNetworkReply *>(sender());
     // ...
     reply->deleteLater();
 }
 
-void OKXTrading::handleAccountResponse(QNetworkReply *reply)
+void OKXTrading::handleAccountResponse()
 {
     // 处理账户查询响应
+    QNetworkReply *reply = dynamic_cast<QNetworkReply *>(sender());
     // ...
     reply->deleteLater();
 }
